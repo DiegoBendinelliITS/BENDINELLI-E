@@ -22,16 +22,16 @@ public class PizzaServer {
 
     // Costruisce la lista delle pizze disponibili
     private void buildPizzaList() {
-        // Aggiunge alcune pizze di esempio alla lista
-        Pizza margherita = new Pizza("Margherita", Arrays.asList("Tomato", "Cheese"), 8.99);
-        Pizza marinara = new Pizza("Marinara", Arrays.asList("Tomato", "Oregano"), 9.99);
-        Pizza biancaneve = new Pizza("Biancaneve", Arrays.asList("Cheese", "Rosemary"), 10.99);
-        Pizza quattroStagioni = new Pizza("Quattro Stagioni", Arrays.asList("Tomato", "Cheese", "Mushrooms", "Ham", "Olives"), 11.99);
+
+        Pizza margherita = new Pizza("Margherita", Arrays.asList("Tomato", "Cheese"), 6.99);
+        Pizza marinara = new Pizza("Marinara", Arrays.asList("Tomato", "Oregano"), 5.59);
+        Pizza biancaneve = new Pizza("Biancaneve", Arrays.asList("Cheese", "Rosemary"), 5.99);
+        Pizza prosciuttofunghi = new Pizza("Prosciutto e Funghi", Arrays.asList("Tomato", "Cheese", "Mushrooms", "Ham", "Olives"), 8.99);
 
         pizze.add(margherita);
         pizze.add(marinara);
         pizze.add(biancaneve);
-        pizze.add(quattroStagioni);
+        pizze.add(prosciuttofunghi);
     }
 
     // Gestisce la connessione del client
@@ -50,26 +50,26 @@ public class PizzaServer {
                 if (parts.length >= 2 && parts[0].equals("GET")) { // Verifica se la richiesta è di tipo GET
                     switch (parts[1]) {
                         case "/with_tomato":
-                            response = getPizzasWithIngredient("Tomato"); // Ottiene le pizze con pomodoro
+                            response = getPizzasWithIngredient("Tomato"); // Ottiene le pizze col pomodoro
                             break;
                         case "/with_cheese":
-                            response = getPizzasWithIngredient("Cheese"); // Ottiene le pizze con formaggio
+                            response = getPizzasWithIngredient("Cheese"); // Ottiene le pizze col formaggio
                             break;
                         case "/sorted_by_price":
                             response = getPizzasSortedByPrice(); // Ottiene le pizze ordinate per prezzo
                             break;
                         default:
-                            response = "Invalid command"; // Comando non valido
+                            response = "Invalid command";
                             break;
                     }
                 }
             } else {
-                response = "Invalid request"; // Richiesta non valida
+                response = "Invalid request";
             }
 
             PrintWriter out = new PrintWriter(outputStream);
             out.println("HTTP/1.1 200 OK");
-            out.println("Content-Type: text/html");
+            out.println("Content-Type: text");
             out.println();
             out.println(response); // Invia la risposta al client
             out.flush();
@@ -84,29 +84,27 @@ public class PizzaServer {
 
     // Ottiene le pizze che contengono un determinato ingrediente
     private String getPizzasWithIngredient(String ingredient) {
-        StringBuilder html = new StringBuilder("<html><body><h1>Pizze con " + ingredient + "</h1><ul>");
+        StringBuilder text = new StringBuilder("Pizze con " + ingredient + ":\n\n");
         for (Pizza pizza : pizze) {
             if (pizza.getIngredienti().contains(ingredient)) {
-                html.append("<li>").append(pizza.getNome()).append(" - Prezzo: ").append(pizza.getPrice())
-                        .append(" - Ingredienti: ").append(pizza.getIngredienti()).append("</li>");
+                text.append(pizza.getNome()).append(" - Prezzo: ").append(pizza.getPrice())
+                        .append(" - Ingredienti: ").append(pizza.getIngredienti()).append("\n");
             }
         }
-        html.append("</ul></body></html>");
-        return html.toString();
+        return text.toString();
     }
+
 
     // Ottiene le pizze ordinate per prezzo
     private String getPizzasSortedByPrice() {
         List<Pizza> sortedPizze = new ArrayList<>(pizze);
         Collections.sort(sortedPizze, Comparator.comparingDouble(Pizza::getPrice));
-        StringBuilder html = new StringBuilder("<html><body><h1>Pizze ordinate per prezzo</h1><ul>");
+        StringBuilder text = new StringBuilder("Pizze ordinate per prezzo:\n\n");
         for (Pizza pizza : sortedPizze) {
-            html.append("<li>").append(pizza.getNome()).append(" - Prezzo: ").append(pizza.getPrice())
-                    .append(" - Ingredienti: ").append(pizza.getIngredienti()).append("</li>");
+            text.append(pizza.getNome()).append(" - Prezzo: ").append(pizza.getPrice())
+                    .append(" - Ingredienti: ").append(pizza.getIngredienti()).append("\n");
         }
-        html.append("</ul></body></html>");
-        return html.toString();
+        return text.toString();
     }
-}
 
-// Classe che rappresenta una pizza
+}

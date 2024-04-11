@@ -1,9 +1,9 @@
 import java.util.ArrayList;
 import java.util.List;
 class Pizza {
-    private String nome;
-    private List<String> ingredienti = new ArrayList<>();
-    private double price;
+    String nome;
+    List<String> ingredienti = new ArrayList<>();
+    double price;
 
     public Pizza(String nome, List<String> ingredienti, double price) {
         this.nome = nome;
